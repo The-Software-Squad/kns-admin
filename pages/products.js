@@ -1,12 +1,47 @@
 import Layout from "@/components/Layout";
+import axios from "axios";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function Products() {
-    return (
-        <Layout>
-            <Link className="btn-primary h-fit" href={'/products/new'}>
-                Add new product
-            </Link>
-        </Layout>
-    )
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    axios.get("/api/products").then((res) => {
+      setProducts(res.data);
+    });
+  }, []);
+  return (
+    <Layout>
+      <div className="flex flex-col w-full gap-5">
+        <Link className="btn-primary h-fit w-fit" href={"/products/new"}>
+          Add new product
+        </Link>
+        <table className="min-w-full">
+  <thead>
+    <tr className="bg-gray-100">
+      <th className="px-6 py-3 text-left font-semibold text-gray-600">Product name</th>
+      <th className="px-6 py-3"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {products.map((product) => (
+      <tr key={product._id} className="border-t">
+        <td className="px-6 py-4 text-gray-800">{product.title}</td>
+        <td className="px-6 py-4">
+          <Link
+            href={`/products/edit/${product._id}`}
+            className="flex items-center"
+          >
+            <span className="text-blue-500 hover:underline mr-2">Edit</span>
+            <span className="material-symbols-rounded text-blue-500">edit_square</span>
+          </Link>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+      </div>
+    </Layout>
+  );
 }

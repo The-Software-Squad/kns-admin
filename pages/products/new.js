@@ -1,18 +1,27 @@
 import Layout from "@/components/Layout";
 import { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 export default function NewProduct() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
+  const [gotoProducts, setGotoProducts] = useState(false)
+  
+  const router = useRouter()
 
   async function createProduct(ev) {
     ev.preventDefault()
     const data = {title, description, price}
     await axios.post('/api/products', data)
+    setGotoProducts(true)
   }
+  if(gotoProducts){
+    router.push('/products')   
+  }
+
   return (
     <Layout>
       <form onSubmit={createProduct} className="flex flex-col w-full">
@@ -33,7 +42,7 @@ export default function NewProduct() {
         <label>Price</label>
         <input 
          type="number"
-         placeholder="price"
+         placeholder="p rice"
          value={price}
          onChange={ev => setPrice(ev.target.value)} />
         <button 
