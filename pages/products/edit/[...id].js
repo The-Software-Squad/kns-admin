@@ -1,10 +1,29 @@
 import Layout from "@/components/Layout";
 import { useRouter } from "next/router";
-export default function EditProductPage(){
-    const router = useRouter()
-    return (
-        <Layout>
-            <div>Edit product</div>
-        </Layout>
-    )
+import { useEffect, useState } from "react";
+import axios from "axios";
+import ProductForm from "@/components/ProductForm";
+
+export default function EditProductPage() {
+  const [productInfo, setProductInfo] = useState(null);
+  const router = useRouter();
+  const { id } = router.query;
+
+  useEffect(() => {
+    if (!id) {
+      return;
+    }
+    axios.get("/api/products?id=" + id).then((res) => {
+      setProductInfo(res.data);
+    });
+  }, [id]);
+
+  return (
+    <Layout>
+      <div className="flex flex-col w-full gap-2">
+        <h1>Edit product</h1>
+        {productInfo && <ProductForm {...productInfo} />}
+      </div>
+    </Layout>
+  );
 }
