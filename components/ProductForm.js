@@ -1,17 +1,20 @@
 import Layout from "@/components/Layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 
 export default function ProductForm({
   _id,
   title: existingTitle,
+  category: assignedCategory,
   description: existingDescription,
   price: existingPrice,
   heroImg: existingHeroImg,
   images: existingImages,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
+  const [category, setCategory] = useState(assignedCategory || "");
+  const [categories, setCategories] = useState([]);
   const [heroImg, setHeroImg] = useState(existingHeroImg || "");
   const [images, setImages] = useState(existingImages || []);
   const [description, setDescription] = useState(existingDescription || "");
@@ -20,9 +23,17 @@ export default function ProductForm({
 
   const router = useRouter();
 
+  useEffect(() => {
+    const getCategories = async () => {
+      const { data } = await axios.get("/api/categories");
+      setCategories(data);
+    };
+    getCategories();
+  }, []);
+
   async function saveProduct(ev) {
     ev.preventDefault();
-    const data = { title, description, price, heroImg, images };
+    const data = { title, category, description, price, heroImg, images };
 
     if (_id) {
       // update the product
@@ -65,6 +76,17 @@ export default function ProductForm({
         onChange={(ev) => setTitle(ev.target.value)}
         required
       />
+      <label>Category name</label>
+      <select
+        value={category}
+        onChange={(ev) => setCategory(ev.target.value)}
+
+      >
+        <option value="no">No category</option>
+        {categories.length > 0 && categories.map((category) => (
+          <option value={category._id} key={category._id}>{category.name}</option>
+        ))}
+      </select>
       <label>Hero Image</label>
       <input
         type="text"

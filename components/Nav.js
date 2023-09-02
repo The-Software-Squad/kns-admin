@@ -26,6 +26,12 @@ export default function Nav() {
           Products
         </Link>
 
+        {/* Categories */}
+        <Link href={"/categories"} className={pathname.includes('/categories') ? activeLink : inactiveLink}>
+        <span className="material-symbols-rounded">format_list_bulleted</span>
+          Categories
+        </Link>
+
         {/* Orders */}
         <Link href={"/orders"} className={pathname.includes('/orders') ? activeLink : inactiveLink}>
           <span className="material-symbols-rounded">list_alt</span>
