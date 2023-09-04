@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -7,6 +8,10 @@ export default function Nav() {
   const activeLink = inactiveLink + " bg-white text-blue-900 rounded-l-lg"
   const router = useRouter()
   const {pathname} = router 
+  async function logout(){
+    await router.push("/");
+    await signOut();
+  }
   return (
     <aside className="text-white p-4 pr-0">
       <Link href={"/"} className="flex gap-2 mb-5 mr-4">
@@ -43,6 +48,12 @@ export default function Nav() {
           <span className="material-symbols-rounded">settings</span>
           Settings
         </Link>
+        
+        {/* Logout */}
+      <button onClick={logout} className="flex gap-2 p-1">
+        <span class="material-symbols-rounded">logout</span>
+          Log out
+        </button>
       </nav>
     </aside>
   );

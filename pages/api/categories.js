@@ -1,18 +1,20 @@
 import { Category } from "@/models/Category";
 import { mongooseConnect } from "@/lib/mongooseConnect"; 
+import { isAdminRequest } from "./auth/[...nextauth]";
 
 export default async function handle(req, res) {
   const { method } = req;
   await mongooseConnect();
+  await isAdminRequest(req, res);
 
   if (method === "GET") {
     res.json( await Category.find().populate("parent") );
     }
 
   if (method === "POST") {
-    let { name, parent, properties } = req.body;
+    let { name, parent, Properties } = req.body;
     if(parent === "") parent = null;
-    Category.create({ name, parent, properties });
+    Category.create({ name, parent, Properties });
     res.status(200).json({ message: "Category created" });
   }
 

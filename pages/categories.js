@@ -37,6 +37,7 @@ export default function Categories() {
       await axios.put("/api/categories", data);
       setEdit(null);
     } else {
+      console.log("data", data);
       await axios.post("/api/categories", data);
     }
     setName("");

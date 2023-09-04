@@ -7,6 +7,7 @@ export default function ProductForm({
   _id,
   title: existingTitle,
   category: assignedCategory,
+  properties: assignedProperties,
   description: existingDescription,
   price: existingPrice,
   heroImg: existingHeroImg,
@@ -15,6 +16,7 @@ export default function ProductForm({
   const [title, setTitle] = useState(existingTitle || "");
   const [category, setCategory] = useState(assignedCategory || "");
   const [categories, setCategories] = useState([]);
+  const [productProperties, setProductProperties] = useState(assignedProperties || {});
   const [heroImg, setHeroImg] = useState(existingHeroImg || "");
   const [images, setImages] = useState(existingImages || []);
   const [description, setDescription] = useState(existingDescription || "");
@@ -33,7 +35,7 @@ export default function ProductForm({
 
   async function saveProduct(ev) {
     ev.preventDefault();
-    const data = { title, category, description, price, heroImg, images };
+    const data = { title, category, properties: productProperties, description, price, heroImg, images };
 
     if (_id) {
       // update the product
@@ -66,6 +68,23 @@ export default function ProductForm({
     setImages(newImages);
   };
 
+  const handleProductProperties = (e, propertyName) => {
+    const newProductProperties = {...productProperties};
+    newProductProperties[propertyName] = e.target.value;
+    setProductProperties(newProductProperties);
+  }
+
+  const propertiesToFill = [];
+  if(categories.length > 0 && category){
+    let CatInfo = categories.find(({_id}) => _id === category );
+    propertiesToFill.push(...CatInfo.Properties);
+    while(CatInfo?.parent?._id){
+      const parentCatInfo = categories.find(({_id}) => _id === CatInfo?.parent?._id);
+      propertiesToFill.push(...parentCatInfo.Properties);
+      CatInfo = parentCatInfo;
+    }
+  }
+
   return (
     <form onSubmit={saveProduct} className="flex flex-col w-full">
       <label>Product name</label>
@@ -87,6 +106,20 @@ export default function ProductForm({
           <option value={category._id} key={category._id}>{category.name}</option>
         ))}
       </select>
+
+      {propertiesToFill.length > 0 && propertiesToFill.map((property, i) => (
+        <div className="flex items-center gap-5" key={i}>
+          <div>{property.name}</div>
+          <select
+            value={productProperties[property.name]}
+            onChange={(e) => handleProductProperties(e, property.name)}
+          >
+            {property.value.map((value, i) => (
+              <option value={value} key={i}>{value}</option>
+            ))}
+          </select>
+        </div>
+      ))}
       <label>Hero Image</label>
       <input
         type="text"
