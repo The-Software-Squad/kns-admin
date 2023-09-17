@@ -16,10 +16,8 @@ export const authOptions = {
   callbacks: {
     session: ({ session, token, user }) => {
       if (adminEmails.includes(session?.user?.email)) {
-        console.log("admin", user);
         return session;
       } else {
-        console.log("not admin", user);
         return false;
       }
       return session;

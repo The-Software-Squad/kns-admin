@@ -108,8 +108,8 @@ export default function ProductForm({
       </select>
 
       {propertiesToFill.length > 0 && propertiesToFill.map((property, i) => (
-        <div className="flex items-center gap-5" key={i}>
-          <div>{property.name}</div>
+        <div className="" key={i}>
+          <label>{property.name[0].toUpperCase() + property.name.substring(1)}</label>
           <select
             value={productProperties[property.name]}
             onChange={(e) => handleProductProperties(e, property.name)}

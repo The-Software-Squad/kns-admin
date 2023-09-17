@@ -5,9 +5,11 @@ import { useEffect, useState } from "react";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true); 
   useEffect(() => {
     axios.get("/api/products").then((res) => {
       setProducts(res.data);
+      setLoading(false);
     });
   }, []);
   return (
@@ -26,7 +28,17 @@ export default function Products() {
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
+          {loading ? (
+             <tr>
+             <td colSpan="2" className="text-center">
+               <div className="flex justify-center items-center w-full h-32">
+                 <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+               </div>
+             </td>
+           </tr>
+            ) :
+            (
+            products.map((product) => (
               <tr key={product._id} className="border-t">
                 <td className="px-6 py-4 text-gray-800">{product.title}</td>
                 <td className="flex gap-10 justify-center px-6 py-4">
@@ -36,7 +48,7 @@ export default function Products() {
                     href={`/products/edit/${product._id}`}
                     className="flex items-center"
                   >
-                    <span className="text-blue-500 hover:underline mr-2">
+                    <span className="text-blue-500 hidden md:block hover:underline mr-2">
                       Edit
                     </span>
                     <span className="material-symbols-rounded text-blue-500">
@@ -49,7 +61,7 @@ export default function Products() {
                     href={`/products/delete/${product._id}`}
                     className="flex items-center"
                   >
-                    <span className="text-red-500 hover:underline mr-2">
+                    <span className="text-red-500 hover:underline mr-2  hidden md:block">
                       Delete
                     </span>
                     <span className="material-symbols-rounded  text-red-500">
@@ -58,7 +70,7 @@ export default function Products() {
                   </Link>
                 </td>
               </tr>
-            ))}
+            )))}
           </tbody>
         </table>
       </div>

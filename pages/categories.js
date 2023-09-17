@@ -10,9 +10,12 @@ export default function Categories() {
   const [edit, setEdit] = useState(null);
   const [parent, setParent] = useState("");
   const [Properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchCategories();
+
+    setLoading(false);
   }, []);
 
   const fetchCategories = async () => {
@@ -54,7 +57,7 @@ export default function Categories() {
         name: property.name,
         value: property.value.join(","),
       }))
-    )
+    );
     if (category.parent?._id) setParent(category.parent?._id);
     else setParent("");
   };
@@ -137,70 +140,70 @@ export default function Categories() {
                   ))}
               </select>
             </div>
-          
-          <div className="mb-2">
-            <label className="block">Properties</label>
-            <button
-              type="button"
-              onClick={addProperty}
-              className="btn-default w-fit text-sm mb-2"
-            >
-              Add new property
-            </button>
-            {Properties.length > 0 &&
-              Properties.map((property, i) => (
-                <div className="flex items-center mb-2  gap-2" key={i}>
-                  <input
-                    type="text"
-                    placeholder="Property name"
-                    className="mb-0"
-                    value={property.name}
-                    onChange={(e) => {
-                      handlePropertyNameChange(i, property, e.target.value);
-                    }}
-                  />
 
-                  <input
-                    type="text"
-                    className="mb-0"
-                    placeholder="Property value"
-                    value={property.value}
-                    onChange={(e) => {
-                      handlePropertyValueChange(i, property, e.target.value);
-                    }}
-                  />
+            <div className="mb-2">
+              <label className="block">Properties</label>
+              <button
+                type="button"
+                onClick={addProperty}
+                className="btn-default w-fit text-sm mb-2"
+              >
+                Add new property
+              </button>
+              {Properties.length > 0 &&
+                Properties.map((property, i) => (
+                  <div className="flex items-center mb-2  gap-2" key={i}>
+                    <input
+                      type="text"
+                      placeholder="Property name"
+                      className="mb-0"
+                      value={property.name}
+                      onChange={(e) => {
+                        handlePropertyNameChange(i, property, e.target.value);
+                      }}
+                    />
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      removeProperty(i);
-                    }}
-                    className="text-white text-sm px-4 py-2 bg-red-500 rounded"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => {
-                setEdit(null), setName(""), setParent(""), setProperties([]);
-              }}
-              type="button"
-              className="btn-default w-fit mr-1"
-            >
-              Cancel
-            </button>
-            <button type="submit" className="btn-primary w-fit">
-              Save
-            </button>
-          </div>
+                    <input
+                      type="text"
+                      className="mb-0"
+                      placeholder="Property value"
+                      value={property.value}
+                      onChange={(e) => {
+                        handlePropertyValueChange(i, property, e.target.value);
+                      }}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        removeProperty(i);
+                      }}
+                      className="text-white text-sm px-4 py-2 bg-red-500 rounded"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  setEdit(null), setName(""), setParent(""), setProperties([]);
+                }}
+                type="button"
+                className="btn-default w-fit mr-1"
+              >
+                Cancel
+              </button>
+              <button type="submit" className="btn-primary w-fit">
+                Save
+              </button>
+            </div>
           </form>
         </div>
 
         {!edit && (
-          <table className="basic mt-4 ">
+          <table className="basic mt-4">
             <thead>
               <tr>
                 <td>Category name</td>
@@ -209,7 +212,15 @@ export default function Categories() {
               </tr>
             </thead>
             <tbody>
-              {categories.length > 0 &&
+              {loading ? (
+              <tr> 
+                 <td colSpan="3" className="text-center">
+               <div className="flex justify-center items-center h-32">
+                 <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+               </div>
+             </td>
+           </tr>
+              ) : (
                 categories.map((category) => (
                   <tr key={category._id}>
                     <td>{category.name}</td>
@@ -220,7 +231,7 @@ export default function Categories() {
                         className="flex items-center cursor-pointer"
                         onClick={() => editCategory(category)}
                       >
-                        <span className="text-blue-500 hover:underline mr-2">
+                        <span className="text-blue-500  hidden md:block hover:underline mr-2">
                           Edit
                         </span>
                         <span className="material-symbols-rounded text-blue-500">
@@ -232,7 +243,7 @@ export default function Categories() {
                         className="flex items-center cursor-pointer"
                         onClick={() => deleteCategory(category)}
                       >
-                        <span className="text-red-500 hover:underline mr-2">
+                        <span className="text-red-500  hidden md:block hover:underline mr-2">
                           Delete
                         </span>
                         <span className="material-symbols-rounded  text-red-500">
@@ -241,7 +252,8 @@ export default function Categories() {
                       </div>
                     </td>
                   </tr>
-                ))}
+                ))
+              )}
             </tbody>
           </table>
         )}

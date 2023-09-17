@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 export default function Nav() {
  
   const inactiveLink = "flex gap-2 p-1"  
-  const activeLink = inactiveLink + " bg-white text-blue-900 rounded-l-lg"
+  const activeLink = inactiveLink + " bg-white text-blue-900 rounded-md p-1"
   const router = useRouter()
   const {pathname} = router 
   async function logout(){
@@ -13,8 +13,8 @@ export default function Nav() {
     await signOut();
   }
   return (
-    <aside className="text-white p-4 pr-0">
-      <Link href={"/"} className="flex gap-2 mb-5 mr-4">
+    <aside className="text-white p-4 px-8  bg-blue-900 w-fit h-full">
+      <Link href={"/"} className="flex gap-2 mb-5 mr-4 hidden md:block">
         <span className="material-symbols-rounded">potted_plant</span>
         <span>KNS Admin</span>
       </Link>
@@ -51,7 +51,7 @@ export default function Nav() {
         
         {/* Logout */}
       <button onClick={logout} className="flex gap-2 p-1">
-        <span class="material-symbols-rounded">logout</span>
+        <span className="material-symbols-rounded">logout</span>
           Log out
         </button>
       </nav>
