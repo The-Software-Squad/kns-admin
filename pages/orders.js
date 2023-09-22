@@ -16,7 +16,8 @@ export default function OrdersPage() {
         <table className="basic">
           <thead>
             <tr>
-              <td>Order ID</td>
+              <td>Date</td>
+              <td>Paid</td>
               <td>Customer name</td>
               <td>Products</td>
             </tr>
@@ -26,6 +27,7 @@ export default function OrdersPage() {
               orders.map((order, i) => (
                 <tr key={i}>
                   <td>{new Date(order.createdAt).toLocaleString()}</td>
+                  <td className={order.paid ? 'text-green-600' : 'text-red-600'}>{order.paid ? 'YES' : 'NO'}</td>
                   <td>{order.name}</td>
                   <td>
                     {order.line_items.map((item, i) => (
