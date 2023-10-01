@@ -1,11 +1,11 @@
 import Layout from "@/components/Layout";
 import axios from "axios";
-import { set } from "mongoose";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 
 export default function Categories() {
   const [name, setName] = useState("");
+  const [image, setImage] = useState("");
   const [categories, setCategories] = useState([]);
   const [edit, setEdit] = useState(null);
   const [parent, setParent] = useState("");
@@ -28,6 +28,7 @@ export default function Categories() {
     e.preventDefault();
     const data = {
       name,
+      image,
       parent,
       Properties: Properties.map((property) => ({
         name: property.name,
@@ -40,11 +41,11 @@ export default function Categories() {
       await axios.put("/api/categories", data);
       setEdit(null);
     } else {
-      console.log("data", data);
       await axios.post("/api/categories", data);
     }
     setName("");
     setParent("");
+    setImage("");
     setProperties([]);
     fetchCategories();
   };
@@ -52,6 +53,7 @@ export default function Categories() {
   const editCategory = (category) => {
     setEdit(category);
     setName(category.name);
+    setImage(category.image);
     setProperties(
       category.Properties.map((property) => ({
         name: property.name,
@@ -140,7 +142,17 @@ export default function Categories() {
                   ))}
               </select>
             </div>
-
+            <div className="py-4">
+              <label>Image</label>
+              <input
+                type="text"
+                placeholder={""}
+                value={image}
+                onChange={(ev) => setImage(ev.target.value)}
+                className="mt-3"
+              />
+            </div>
+            {image && (<img src={image} alt="image"/>)}
             <div className="mb-2">
               <label className="block">Properties</label>
               <button
@@ -188,7 +200,7 @@ export default function Categories() {
             <div className="flex gap-2">
               <button
                 onClick={() => {
-                  setEdit(null), setName(""), setParent(""), setProperties([]);
+                  setEdit(null), setName(""),setImage("") ,setParent(""), setProperties([]);
                 }}
                 type="button"
                 className="btn-default w-fit mr-1"
@@ -213,13 +225,13 @@ export default function Categories() {
             </thead>
             <tbody>
               {loading ? (
-              <tr> 
-                 <td colSpan="3" className="text-center">
-               <div className="flex justify-center items-center h-32">
-                 <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
-               </div>
-             </td>
-           </tr>
+                <tr>
+                  <td colSpan="3" className="text-center">
+                    <div className="flex justify-center items-center h-32">
+                      <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+                    </div>
+                  </td>
+                </tr>
               ) : (
                 categories.map((category) => (
                   <tr key={category._id}>

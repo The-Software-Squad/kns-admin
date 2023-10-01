@@ -12,16 +12,16 @@ export default async function handle(req, res) {
     }
 
   if (method === "POST") {
-    let { name, parent, Properties } = req.body;
+    let { name, image, parent, Properties } = req.body;
     if(parent === "") parent = null;
-    Category.create({ name, parent, Properties });
+    Category.create({ name, image, parent, Properties });
     res.status(200).json({ message: "Category created" });
   }
 
   if (method === "PUT") {
-    let {name, parent,Properties, id} = req.body;
+    let {name, image, parent,Properties, id} = req.body;
     if(parent === "") parent = null;
-    const doc = await Category.updateOne({_id: id}, {name, parent, Properties} );
+    const doc = await Category.updateOne({_id: id}, {name, image, parent, Properties} );
     res.json(doc);
   }
 

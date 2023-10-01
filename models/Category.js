@@ -5,6 +5,10 @@ const CategorySchema = new Schema({
         type: String,
         required: true,
     },
+    image: {
+        type: String,
+        required: true,
+    },
     parent: {
         type: mongoose.Types.ObjectId,
         ref: "Category",
